@@ -3,48 +3,156 @@
 (might append some of the things in gif.js) -->
  <!-- Add jquery and bootsrap link inside head -->
  <!-- Add link to js and css files -->
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <meta http-equiv="X-UA-Compatible" content="ie=edge">
-    <title>Document</title>
-
-    <!-- jQuery CDN -->
-    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
-    <!-- Latest compiled and minified CSS -->
-    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css" integrity="sha384-BVYiiSIFeK1dGmJRAkycuHAHRg32OmUcww7on3RYdg4Va+PmSTsz/K68vbdEjh4u" crossorigin="anonymous">
-    <!-- Optional theme -->
-    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap-theme.min.css" integrity="sha384-rHyoN1iRsVXV4nD0JutlnGaslCJuC7uwjduW9SVrLvRYooPp2bWYgmgJQIXwl/Sp" crossorigin="anonymous">
-    <!-- Latest compiled and minified JavaScript -->
-    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js" integrity="sha384-Tc5IQib027qvyjSMfHjOMaLkfuWVxZxUPnCJA7l2mCWNIpG9mGCD8wGNIcPD7Txa" crossorigin="anonymous"></script>
-
-<link rel="stylesheet" href="assets/css/style.css">
-</head>
-<body>
-    <script src="assets/javascript/gif.js">
-    $(document).ready(function(){
-
-    
-    // API key goes here
-    var APIquery = "c03d394db2d64bb4b5d7ecc906f61027"; 
-     // add ajax api for Giphy
-     var queryURL = "https://api.giphy.com/v1/gifs/search?q=ryan+gosling&api_key="+ APIkey+"&limit=10"
-     $.ajax({
-         url: queryURL,
-         method: 'GET'
-     }).done(function(respond){
-
-     })
-     // append input to div, this input will generate buttons that contain key words
-     // when the button is clicked it will send request to giphy trough ajax 
-     //and will pull 10 gif that relate to the keyword on the button
-
-    });
-
-
-    </script>
-    
-</body>
-</html>
+ <!DOCTYPE html>
+ <html lang="en">
+ 
+ <head>
+         <meta charset="UTF-8">
+         <meta name="viewport" content="width=device-width, initial-scale=1.0">
+         <meta http-equiv="X-UA-Compatible" content="ie=edge">
+         <link rel="stylesheet" href=" https://cdnjs.cloudflare.com/ajax/libs/bootstrap-material-design/4.0.2/bootstrap-material-design.css">
+ 
+         <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0-beta/css/bootstrap.min.css" integrity="sha384-/Y6pD6FV/Vv2HJnA6t+vslU6fwYXjCFtcEpHbNJ0lyAFsXTsjBbfaDjzALeQsN6M"
+                 crossorigin="anonymous">
+         <!-- <link rel="stylesheet" href="path/to/font-awesome/css/font-awesome.min.css"> -->
+         <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
+         <title>Gif Search</title>
+ </head>
+ 
+ <body>
+         <div class="container">
+                 <div class="jumbotron">
+                         <h1>Gifs</h1>
+ 
+ 
+ 
+                         <style>
+                                 a, a:hover{
+                                         margin-top: 5%;
+                                         display: block;
+                                         background-color: lightgray;
+                                         text-decoration: none;
+                                         color:black;
+                                 };
+                         </style>
+ 
+ 
+ 
+                         <i class="fa fa-gif-o" aria-hidden="true"></i>
+ 
+                         <nav class="navbar navbar-light bg-faded">
+                                 <form class="form-inline">
+                                         <input id="find" class="form-control mr-sm-2" type="text" placeholder="Search">
+                                         <button class="btn btn-outline-success my-2 my-sm-0" type="submit">Search</button>
+                                 </form>
+                         </nav>
+ 
+                 </div>
+                 <div class="paper1">
+                 </div>
+ 
+ 
+                 <script>
+                         $(document).ready(function () {
+ 
+ 
+                                 var gifs = [];
+ 
+                                 function btnGen(){
+                                         for(var i = 0; i < gifs.length; i++){
+                                         giphy = gifs[i];
+                                         $(".paper1").append("<button>" + gifs[i] + "</button>")
+                                         }
+                                 }
+ 
+ 
+                                 $("#add-.btn").on("click", function(event) {
+         // event.preventDefault() prevents submit button from trying to send a form.
+         // Using a submit button instead of a regular button allows the user to hit
+         // "Enter" instead of clicking the button if desired
+         event.preventDefault();
+ 
+         // Write code to grab the text the user types into the input field
+         var input = $('#find').val().trim();
+         // Write code to add the new movie into the movies array
+         movies.push(input);
+         // The renderButtons function is called, rendering the list of movie buttons
+         $('.paper1').empty();
+           
+           for (var v = 0; v < movies.length; v++) {
+            
+            var b = $('<button>')
+            b.addClass('gif')
+            b.attr('data-name', gif[v])
+            b.text(movies[v]),
+            $('.paper1').append(b);
+             
+           }
+     
+ 
+         // renderButtons();
+       });
+ 
+                                 $(".btn").on("click", (event) => {
+                                         event.preventDefault();
+ 
+ 
+                                     
+                              
+  
+                                     
+                                         var queryURL = "https://api.giphy.com/v1/gifs/search?api_key=c03d394db2d64bb4b5d7ecc906f61027&q="+ search +"&limit=25&offset=0&rating=G&lang=en&limit=10"
+                                        
+                                         var search = $("#find").val().trim()
+                                      
+ 
+ 
+                                         $.ajax({
+                                                 url: queryURL,
+                                                 method: 'GET',
+                                         }).done(function (result) {
+ 
+ 
+                                                 
+                                                 (result);
+           
+ 
+                                                 for (var i = 0; i < result.length; i++) {
+                                                         var element = result[i].snippet;
+ 
+ 
+ 
+ 
+                                                         var link = $("<a>");
+ 
+                                                         link.attr("href", result.response.docs[i].web_url);
+ 
+                                                         
+                                                         link.html(element);
+ 
+                                                         $(".paper1").append(link);
+ 
+                                                        
+ 
+                                                 }
+ 
+                                         }).fail(function (err) {
+                                                 throw err;
+ 
+                                        
+                                         });
+                                 
+                                 });
+ 
+                                 $(document).on("click", ".paper", function () {
+ 
+ 
+                                         console.log($(this));
+ 
+                                 });
+ 
+                         });
+                 </script>
+ </body>
+ 
+ </html>
