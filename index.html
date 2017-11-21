@@ -1,4 +1,4 @@
- <!-- not able to link the generated buttons with the giphy api -->
+<!-- not able to link the generated buttons with the giphy api -->
 
 <!DOCTYPE html>
 <html lang="en">
@@ -21,25 +21,22 @@
                 <div class="jumbotron">
                         <h1>Gifs</h1>
 
+                        <div id="animal-buttons">
 
-
-                        <style>
-                               
-                        </style>
-
+                        </div>
 
 
                         <i class="fa fa-gif-o" aria-hidden="true"></i>
 
-                        <nav class="navbar navbar-light bg-faded">
+                        <nav id="animal-form" class="navbar navbar-light bg-faded">
                                 <form class="form-inline">
-                                        <input id="find" class="form-control mr-sm-2" type="text" placeholder="Search">
-                                        <button class="btn btn-outline-success my-2 my-sm-0" type="submit">Search</button>
+                                        <input id="animal-input" class=" form-control mr-sm-2" type="text" placeholder="Search">
+                                        <button id="add-animal" class="btn btn-outline-success my-2 my-sm-0" type="submit">Search</button>
                                 </form>
                         </nav>
 
                 </div>
-                <div class="paper1">
+                <div id="animals" class="paper1">
                 </div>
 
 
@@ -47,99 +44,103 @@
                         $(document).ready(function () {
 
 
-                                var gifs = [];
+                                $("#add-animal").on("click", function (event) {
 
-                                function btnGen(){
-                                        for(var i = 0; i < gifs.length; i++){
-                                        giphy = gifs[i];
-                                        $(".paper1").append("<button>" + gifs[i] + "</button>")
-                                        }
-                                }
-
-
-                                $(".btn").on("click", function(event) {
-       
-        event.preventDefault();
-
-    
-        var input = $('#find').val().trim();
-       
-        gifs.push(input);
-       
-        $('.paper1').empty();
-          
-          for (var v = 0; v < gifs.length; v++) {
-           
-           var b = $('<button>')
-           b.addClass('gif')
-           b.attr('data-name', gifs[v])
-           b.text(gifs[v]),
-           $('.paper1').append(b);
-            
-          }
-    
-
-        // renderButtons();
-      });
-
-                                $("<button>").on("click", (event) => {
                                         event.preventDefault();
 
 
-                                    
-                             
- 
-                                    
-                                        var queryURL = "https://api.giphy.com/v1/gifs/search?api_key=c03d394db2d64bb4b5d7ecc906f61027&q="+ input +"&limit=25&offset=0&rating=G&lang=en&limit=10"
-                                       
-                                        var search = $("#find").val().trim()
-                                     
+                                        var input = $('#animal-input').val().trim();
+                                        
 
+
+                                });
+
+
+                                var animals = [];
+
+
+                                // function to make buttons and add to page
+                                function populateButtons(arrayToUse, classToAdd, areaToAddTo) {
+                                        $(areaToAddTo).empty();
+
+                                        for (var i = 0; i < arrayToUse.length; i++) {
+                                                var a = $("<button>");
+                                                a.addClass(classToAdd);
+                                                a.attr("data-type", arrayToUse[i]);
+                                                a.text(arrayToUse[i]);
+                                                $(areaToAddTo).append(a);
+                                                $('input').empty();
+                                        }
+
+                                }
+
+                                $(document).on("click", ".animal-button", function () {
+                                        $("#animals").empty();
+                                        $(".animal-button").removeClass("active");
+                                        $(this).addClass("active");
+
+                                        var type = $(this).attr("data-type");
+                                        var queryURL = "http://api.giphy.com/v1/gifs/search?q=" + type + "&api_key=dc6zaTOxFJmzC&limit=10";
 
                                         $.ajax({
                                                 url: queryURL,
-                                                method: 'GET',
-                                        }).done(function (result) {
+                                                method: "GET"
+                                        })
+                                                .done(function (response) {
+                                                        var results = response.data;
 
+                                                        for (var i = 0; i < results.length; i++) {
+                                                                var animalDiv = $("<div class=\"animal-item\">");
 
-                                                
-                                                console.log(result);
-          
+                                                                var rating = results[i].rating;
 
-                                                for (var i = 0; i < result.length; i++) {
-                                                        var element = result[i].snippet;
+                                                                var p = $("<p>").text("Rating: " + rating);
 
+                                                                var animated = results[i].images.fixed_height.url;
+                                                                var still = results[i].images.fixed_height_still.url;
 
+                                                                var animalImage = $("<img>");
+                                                                animalImage.attr("src", still);
+                                                                animalImage.attr("data-still", still);
+                                                                animalImage.attr("data-animate", animated);
+                                                                animalImage.attr("data-state", "still");
+                                                                animalImage.addClass("animal-image");
 
+                                                                animalDiv.append(p);
+                                                                animalDiv.append(animalImage);
 
-                                                        var link = $("<a>");
-
-                                                        link.attr("href", result.response.docs[i].web_url);
-
-                                                        
-                                                        link.html(element);
-
-                                                        $(".paper1").append(link);
-
-                                                       
-
-                                                }
-
-                                        }).fail(function (err) {
-                                                throw err;
-
-                                       
-                                        });
-                                
+                                                                $("#animals").append(animalDiv);
+                                                        }
+                                                });
                                 });
 
-                                $(document).on("click", ".paper", function () {
+                                $(document).on("click", ".animal-image", function () {
 
+                                        var state = $(this).attr("data-state");
 
-                                        console.log($(this));
+                                        if (state === "still") {
+                                                $(this).attr("src", $(this).attr("data-animate"));
+                                                $(this).attr("data-state", "animate");
+                                        }
+                                        else {
+                                                $(this).attr("src", $(this).attr("data-still"));
+                                                $(this).attr("data-state", "still");
+                                        }
+                                });
+
+                                $("#add-animal").on("click", function (event) {
+                                        event.preventDefault();
+                                        var newAnimal = $("input").eq(0).val();
+
+                                        if (newAnimal.length > 2) {
+                                                animals.push(newAnimal);
+                                        }
+
+                                        populateButtons(animals, "animal-button", "#animal-buttons");
 
                                 });
 
+                                populateButtons(animals, "animal-button", "#animal-buttons");
                         });
                 </script>
 </body>
